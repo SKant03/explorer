@@ -34,3 +34,19 @@ export function blockDetailsQuery(chainId: number, blockNumber: number) {
     },
   });
 }
+export function useLatestTransactions(chainId: number) {
+  const { data: blockNumbers, isLoading: loadingBlocks } = blockListQuery(
+    chainId,
+    1
+  );
+  const latestBlock = blockNumbers?.[0];
+  const { data: blockDetails, isLoading: loadingDetails } = blockDetailsQuery(
+    chainId,
+    latestBlock ?? 0
+  );
+  const transactions = blockDetails?.result?.transactions ?? [];
+  return {
+    transactions,
+    isLoading: loadingBlocks || loadingDetails,
+  };
+}
