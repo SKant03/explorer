@@ -1,7 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
+import blockSliceReducer  from "./blockSlice";
 
-export default configureStore:configureStore({
+export const store = configureStore({
     reducer:{
-        blocks:blockReducer,
+        blocks:blockSliceReducer,
     }
 })
+
+export type AppStore = typeof store;
+
+export type RootState = ReturnType<AppStore['getState']>;
+
+export type AppDispatch = AppStore['dispatch'];

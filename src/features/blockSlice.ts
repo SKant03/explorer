@@ -1,10 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
 
-const initalState = {
-    blocks:[]
+interface BlocksState {
+  blocks: any[];
 }
+const initialState: BlocksState = {
+  blocks: [],
+};
 
 const blockSlice = createSlice({
-    name:"blocks",
-    
-})
+  name: "blocks",
+  initialState,
+  reducers: {
+    addBlock(state, action) {
+      state.blocks.unshift(action.payload);
+    },
+  },
+});
+
+export const { addBlock } = blockSlice.actions;
+
+export default blockSlice.reducer;

@@ -1,9 +1,14 @@
-import { useLatestTransactions } from "../features/useExplorerQuery"
-export default function TransactionList({ chainId }: { chainId: number }) {
-  const { transactions, isLoading } =
-    useLatestTransactions(chainId);
+import { useSelector } from "react-redux";
+import type { RootState } from "../features/store";
 
-  if (isLoading) return <div>Loading...</div>;
+export default function TransactionList() {
+  const blocks = useSelector((state:RootState)=> state.blocks.blocks)
+
+  if(!blocks.length) {
+    return <p>loading transaction</p>
+  }
+
+  const transactions = blocks[0].transactions;
 
   return (
     <div className="p-4">
@@ -14,6 +19,9 @@ export default function TransactionList({ chainId }: { chainId: number }) {
         <div key={i} className="p-2 mb-2 border rounded">
           <p>
             <strong>Hash:</strong> {tx.hash}
+          </p>
+          <p>
+            <strong>Number:</strong>{parseInt(tx.blockNumber, 16)}
           </p>
           <p>
             <strong>From:</strong> {tx.from}

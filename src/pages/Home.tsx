@@ -6,8 +6,8 @@ export default function Home() {
 
   return (
     <div>
-      {/* <BlockList chainId={chainId} /> */}
-      {<TransactionList chainId={chainId} />}
+      <BlockList chainId={chainId} />
+      <TransactionList />
     </div>
   );
 }
