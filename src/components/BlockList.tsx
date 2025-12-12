@@ -27,16 +27,27 @@ export default function BlockList({ chainId }: { chainId: number }) {
     <div className="w-full flex flex-col p-2 text-sm lg:text-lg items-center">
       {isLoading && <div>Loading...</div>}
       {error && <div>Error fetching block</div>}
+
+      <table className="w-full">
+        <thead>
+          <tr>
+          <th>Block Number</th>
+          <th>Hash</th>
+          <th>BlockSize</th>
+          <th>Total Transactios</th>
+          </tr>
+        </thead>
+      <tbody className="w-full">
       {latestFive.map((block) => (
-        <div key={block.hash} className="w-full md:w-[95%] lg:w-[90%] m-1">
-          <div className="w-full flex justify-between p-2 rounded px-10 bg-gray-200">
-            <p>{parseInt(block.number ?? "0x0", 16)}</p>
-            <p className="hidden md:table-cell">{block.hash}</p>
-            <p>{parseInt(block.size ?? "0x0", 16)}</p>
-            <p>{block.transactions?.length || 0}</p>
-          </div>
-        </div>
+          <tr >
+            <td><p>{parseInt(block.number ?? "0x0", 16)}</p></td>
+            <td><p className="hidden md:table-cell">{block.hash}</p></td>
+            <td><p>{parseInt(block.size ?? "0x0", 16)}</p></td>
+            <td><p>{block.transactions?.length || 0}</p></td>
+          </tr>
       ))}
+      </tbody> 
+      </table>
     </div>
   );
 }
