@@ -1,8 +1,8 @@
 import { createContext } from "react";
 
 export const themes = {
-  light: "bg-gray-200 text-black",
-  dark: "bg-gray-900 text-white",
+  light: "bg-slate-50 text-slate-900 border-slate-200",
+  dark: "bg-slate-950 text-slate-100 border-slate-800",
 } as const;
 export interface ThemeContextType {
   theme: string;
