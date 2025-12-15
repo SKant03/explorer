@@ -1,12 +1,16 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../features/store";
 import clsx from "clsx";
+import { useState } from "react";
 import { useIsDark } from "../theme/isDark";
 import { Link } from "react-router-dom";
+import { Copy } from "lucide-react";
+import useTruncate from "../utils/TruncateMiddle";
 
 export default function TransactionList() {
   const blocks = useSelector((state: RootState) => state.blocks.blocks);
   const isDark = useIsDark();
+  const truncate = useTruncate();
 
   if (!blocks.length) {
     return (
@@ -16,72 +20,116 @@ export default function TransactionList() {
     );
   }
 
+  function formatEth(valueHex?: string) {
+    if (!valueHex) return " ETH";
+
+    const wei = BigInt(valueHex);
+    if (wei === 0n) return "    000 ETH";
+
+    const eth = Number(wei) / 1e18;
+
+    if (eth < 0.0001) return "< 0.0001 ETH";
+    if (eth < 1) return eth.toFixed(6) + " ETH";
+
+    return eth.toFixed(6) + " ETH";
+  }
+
   const transactions = blocks[0].transactions ?? [];
 
+  // Copy state for toast
+  const [copied, setCopied] = useState<string | null>(null);
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(text);
+    setTimeout(() => setCopied(null), 1500);
+  };
+
   return (
-    <div className="w-full flex justify-center p-4 text-sm lg:text-base min-h-screen h-full">
-      <div
-        className={clsx(
-          "overflow-x-auto rounded-xl border w-full max-w-6xl",
-          isDark ? "border-slate-800 bg-slate-900" : "border-slate-200 bg-white"
-        )}
-      >
-        <table className="w-full border-collapse">
-          <thead className={clsx(isDark ? "bg-slate-800" : "bg-slate-100")}>
-            <tr className="text-left text-lg">
-              <th className="px-4 py-3 font-medium hidden md:table-cell">
-                Hash
-              </th>
-              <th className="px-4 py-3 font-medium">Block</th>
-              <th className="px-4 py-3 font-medium hidden lg:table-cell">
-                From
-              </th>
-              <th className="px-4 py-3 font-medium hidden lg:table-cell">To</th>
-              <th className="px-4 py-3 font-medium">Value</th>
-            </tr>
-          </thead>
+    <div className="w-full flex flex-col items-center p-4 text-sm lg:text-base min-h-screen gap-4">
+      {transactions.length === 0 && (
+        <div className="text-center py-6 text-slate-500">
+          No transactions in this block.
+        </div>
+      )}
 
-          <tbody>
-            {transactions.length === 0 && (
-              <tr>
-                <td
-                  colSpan={5}
-                  className="px-4 py-6 text-center text-slate-500"
-                >
-                  No transactions in this block.
-                </td>
-              </tr>
-            )}
+      {transactions.map((tx: any) => (
+        <div
+          key={tx.hash}
+          className={clsx(
+            "w-full max-w-6xl p-4 rounded-xl border flex flex-col md:flex-row md:justify-between gap-2 md:gap-0 transition hover:shadow-lg",
+            isDark
+              ? "border-slate-800 bg-slate-900 hover:bg-slate-800/50"
+              : "border-slate-200 bg-white hover:bg-slate-50"
+          )}
+        >
+          {/* Hash */}
+          <div className="flex items-center gap-2">
+            <Link
+              to={`/tx/${tx.hash}`}
+              className="font-mono font-medium text-blue-600 hover:underline truncate max-w-[200px] md:max-w-[300px] lg:max-w-[400px]"
+              title={tx.hash}
+            >
+              {truncate(tx.hash)}
+            </Link>
+            <Copy
+              className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 cursor-pointer"
+              onClick={() => handleCopy(tx.hash)}
+            />
+          </div>
 
-            {transactions.map((tx: any) => (
-              <tr
-                key={tx.hash}
-                className="border-t border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition"
-              >
-                <td className="px-4 py-3 font-mono text-xs hidden md:table-cell truncate max-w-[260px]">
-                  <Link to={`/tx/${tx.hash}`}>{tx.hash}</Link>
-                </td>
 
-                <td className="px-4 py-3 font-mono">
-                  {parseInt(tx.blockNumber, 16)}
-                </td>
+          {/* From */}
+          <div className="flex items-center gap-2 mt-2 md:mt-0">
+            <span
+              className="font-mono text-xs truncate max-w-[150px] md:max-w-[200px] lg:max-w-[250px]"
+              title={tx.from}
+            >
+              From:{truncate(tx.from)}
+            </span>
+            <Copy
+              className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 cursor-pointer"
+              onClick={() => handleCopy(tx.from)}
+            />
+          </div>
 
-                <td className="px-4 py-3 font-mono text-xs hidden lg:table-cell truncate max-w-[200px]">
-                  {tx.from}
-                </td>
+          {/* To */}
+          <div className="flex items-center gap-2 mt-2 md:mt-0">
+            <span
+              className="font-mono text-xs truncate max-w-[150px] md:max-w-[200px] lg:max-w-[250px]"
+              title={tx.to}
+            >
+              To:{truncate(tx.to)}
+            </span>
+            <Copy
+              className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 cursor-pointer"
+              onClick={() => handleCopy(tx.to)}
+            />
+          </div>
 
-                <td className="px-4 py-3 font-mono text-xs hidden lg:table-cell truncate max-w-[200px]">
-                  {tx.to}
-                </td>
+          {/* Value */}
+          <div className=" font-mono font-medium mt-2 md:mt-0 ">
+            {formatEth(tx.value)}
+          </div>
+        </div>
+      ))}
 
-                <td className="px-4 py-3 font-mono">
-                  {parseInt(tx.value ?? "0x0", 16)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {copied && (
+        <div className="fixed left-4 bottom-4 bg-gray-800 text-white px-3 py-2 rounded shadow-lg z-50 text-sm animate-slide-in">
+          Copied to clipboard!
+        </div>
+      )}
+
+      <style>
+        {`
+          @keyframes slide-in {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+          }
+          .animate-slide-in {
+            animation: slide-in 0.3s ease-out;
+          }
+        `}
+      </style>
     </div>
   );
 }
