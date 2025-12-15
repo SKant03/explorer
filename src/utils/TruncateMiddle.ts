@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
 
-/**
- * Truncates an address or string in the middle based on screen width.
- * Example: 0x123456…abcd
- */
 export default function useTruncate() {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
@@ -20,7 +16,7 @@ export default function useTruncate() {
     let maxLength: number;
     if (screenWidth < 480) maxLength = 10; // mobile
     else if (screenWidth < 768) maxLength = 16; // tablet
-    else maxLength = 24; // desktop
+    else maxLength = 36; // desktop
 
     if (address.length <= maxLength) return address;
 

@@ -36,7 +36,7 @@ export default function BlockList({ chainId }: { chainId: number }) {
   };
 
   return (
-    <div className="w-full flex flex-col items-center p-4 text-sm lg:text-base h-screen gap-4">
+    <div className="w-full flex flex-col items-center p-4 text-sm lg:text-base h-screen gap-1">
       {isLoading && (
         <div className="text-center py-6">Loading latest blocks…</div>
       )}
@@ -46,7 +46,7 @@ export default function BlockList({ chainId }: { chainId: number }) {
           Error fetching blocks
         </div>
       )}
-
+      <p className="text-lg font-semibold w-full max-w-6xl">Latest Blocks</p>
       {latestFive.map((block) => {
         const blockNumber = parseInt(block.number ?? "0x0", 16);
         const blockSize = parseInt(block.size ?? "0x0", 16);
@@ -59,7 +59,7 @@ export default function BlockList({ chainId }: { chainId: number }) {
           <div
             key={block.hash}
             className={clsx(
-              "w-full max-w-4xl p-4 rounded-xl border transition hover:shadow-lg flex justify-between gap-2 md:gap-0",
+              "w-full max-w-6xl p-4 rounded-xl border transition hover:shadow-lg flex justify-between gap-2 md:gap-0",
               isDark
                 ? "border-slate-800 bg-slate-900 hover:bg-slate-800/50"
                 : "border-slate-200 bg-white hover:bg-slate-50"
@@ -83,13 +83,15 @@ export default function BlockList({ chainId }: { chainId: number }) {
               </span>
             </div>
             <div className="hidden md:table-cell">
-            <div className=" flex  justify-center  md:gap-2 mt-2 md:mt-0  group">
-              <span >Miner: {truncate(block.miner)}</span>
-              <Copy
-                className=" w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 cursor-pointer"
-                onClick={() => handleCopy(block.miner)}
-              />
-            </div>
+              <div className=" flex  justify-center  md:gap-2 mt-2 md:mt-0  group">
+                <span className="hover:overflow-visible">
+                  Miner: {truncate(block.miner)}
+                </span>
+                <Copy
+                  className=" w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 cursor-pointer"
+                  onClick={() => handleCopy(block.miner)}
+                />
+              </div>
             </div>
             <div className="flex gap-4 mt-2 md:mt-0">
               <div>

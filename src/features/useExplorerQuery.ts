@@ -8,10 +8,12 @@ export function blockDetailsQuery(chainId: number, blockNumber: string) {
     queryKey: ["blockdetails", chainId, blockNumber],
     queryFn: async () => {
       const response = await fetch(
-        `${BASE_URL}?chainid=${chainId}&module=proxy&action=eth_getBlockByNumber&tag=0x${Number(blockNumber).toString(16)}&boolean=true&apikey=${API_KEY}`
+        `${BASE_URL}?chainid=${chainId}&module=proxy&action=eth_getBlockByNumber&tag=0x${Number(
+          blockNumber
+        ).toString(16)}&boolean=true&apikey=${API_KEY}`
       );
       const res = await response.json();
-      console.log(res)
+      console.log(res);
       return res;
     },
   });
@@ -31,7 +33,7 @@ export function useGetLatestBlock(chainId: number) {
         `${BASE_URL}?chainid=${chainId}&module=proxy&action=eth_getBlockByNumber&tag=${latestBlockNo}&boolean=true&apikey=${API_KEY}`
       );
       const blockDetailData = await blockDetailRes.json();
-      console.log(blockDetailData)
+      console.log(blockDetailData);
 
       return blockDetailData.result;
     },
@@ -39,7 +41,7 @@ export function useGetLatestBlock(chainId: number) {
   });
 }
 
-export function useTransactionDetails(chainId:number,txHash: string) {
+export function useTransactionDetails(chainId: number, txHash: string) {
   return useQuery({
     queryKey: ["txdetails", txHash],
     enabled: !!txHash,
@@ -48,13 +50,13 @@ export function useTransactionDetails(chainId:number,txHash: string) {
         `${BASE_URL}?chainId=${chainId}&module=proxy&action=eth_getTransactionByHash&txhash=${txHash}&apikey=${API_KEY}`
       );
       const res = await response.json();
-      console.log("res",res)
+      console.log("res", res);
       return res;
     },
   });
 }
 
-export function useTransactionReceipt(chainId:number,txHash: string) {
+export function useTransactionReceipt(chainId: number, txHash: string) {
   return useQuery({
     queryKey: ["txreceipt", txHash],
     enabled: !!txHash,

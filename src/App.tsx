@@ -13,34 +13,46 @@ function App() {
   const [chainId, setChainId] = useState<number>(11155111);
   const isDark = useIsDark();
   return (
-    <>
-      <div
+    <div>
+      <header
         className={clsx(
-          "w-full flex justify-between py-2 items-center font-semibold text-2xl",
-          isDark ? "" : ""
+          "w-full flex justify-between p-3 items-center font-semibold text-2xl",
+          isDark ? "bg-gray-900/20" : "bg-gray-200"
         )}
       >
-        <h2>Explorer</h2>
-        <div>
-          <nav>
-            <Link to="/" className="mx-3">
-              List
+        <div className="flex items-center gap-6">
+          <h1 className="font-bold text-2xl">Explorer</h1>
+          <nav className="flex gap-4 text-lg">
+            <Link
+              to="/"
+              className={clsx(
+                "hover:underline",
+                isDark ? "text-slate-200" : "text-slate-800"
+              )}
+            >
+              Block List
             </Link>
-            <Link to="/transaction" className="mx-3">
-              Transaction
+            <Link
+              to="/transaction"
+              className={clsx(
+                "hover:underline",
+                isDark ? "text-slate-200" : "text-slate-800"
+              )}
+            >
+              Transactions
             </Link>
           </nav>
         </div>
         <ThemeButton />
-      </div>
+      </header>
 
       <Routes>
         <Route path="/" element={<BlockList chainId={chainId} />} />
         <Route path="/transaction" element={<TransactionList />} />
         <Route path="/block/:blockNo" element={<Block chainId={chainId} />} />
-        <Route path ="/tx/:txHash" element={<Transaction chainId={chainId}/>} />
+        <Route path="/tx/:txHash" element={<Transaction chainId={chainId} />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
