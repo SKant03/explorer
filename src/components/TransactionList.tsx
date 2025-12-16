@@ -4,7 +4,6 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useIsDark } from "../theme/isDark";
 import { Link } from "react-router-dom";
-import { Copy } from "lucide-react";
 import useTruncate from "../utils/TruncateMiddle";
 
 export default function TransactionList() {
@@ -22,29 +21,17 @@ export default function TransactionList() {
 
   function formatEth(valueHex?: string) {
     if (!valueHex) return " ETH";
-
     const wei = BigInt(valueHex);
     if (wei === 0n) return "    000 ETH";
-
     const eth = Number(wei) / 1e18;
-
     if (eth < 0.0001) return "< 0.0001 ETH";
     if (eth < 1) return eth.toFixed(6) + " ETH";
-
     return eth.toFixed(6) + " ETH";
   }
-
   const transactions = blocks[0].transactions ?? [];
-  const [copied, setCopied] = useState<string | null>(null);
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(text);
-    setTimeout(() => setCopied(null), 1500);
-  };
-
   return (
     <div className="w-full flex flex-col items-center p-4 text-sm lg:text-base min-h-screen gap-1">
-      <p className="text-lg font-semibold w-full max-w-6xl">
+      <p className="text-xl m-2 font-semibold w-full max-w-6xl">
         Latest Transactions
       </p>
       <div
@@ -84,10 +71,6 @@ export default function TransactionList() {
             >
               {truncate(tx.hash)}
             </Link>
-            <Copy
-              className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 cursor-pointer"
-              onClick={() => handleCopy(tx.hash)}
-            />
           </div>
           <div className="flex items-center gap-2 mt-2 md:mt-0 w-3/12">
             <span
@@ -96,10 +79,6 @@ export default function TransactionList() {
             >
               {truncate(tx.from)}
             </span>
-            <Copy
-              className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 cursor-pointer"
-              onClick={() => handleCopy(tx.from)}
-            />
           </div>
           <div className="flex items-center gap-2 mt-2 md:mt-0 w-3/12">
             <span
@@ -108,34 +87,12 @@ export default function TransactionList() {
             >
               {truncate(tx.to)}
             </span>
-            <Copy
-              className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 cursor-pointer"
-              onClick={() => handleCopy(tx.to)}
-            />
           </div>
           <div className="truncate font-mono font-medium mt-2 md:mt-0  w-2/12">
             {formatEth(tx.value)}
           </div>
         </div>
       ))}
-
-      {copied && (
-        <div className="fixed left-4 bottom-4 bg-gray-800 text-white px-3 py-2 rounded shadow-lg z-50 text-sm animate-slide-in">
-          Copied to clipboard!
-        </div>
-      )}
-
-      <style>
-        {`
-          @keyframes slide-in {
-            0% { opacity: 0; transform: translateX(-20px); }
-            100% { opacity: 1; transform: translateX(0); }
-          }
-          .animate-slide-in {
-            animation: slide-in 0.3s ease-out;
-          }
-        `}
-      </style>
     </div>
   );
 }

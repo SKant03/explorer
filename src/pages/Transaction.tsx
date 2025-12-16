@@ -33,7 +33,6 @@ export default function Transaction({ chainId }: { chainId: number }) {
   const tx = txData.result;
   const receipt = receiptData.result;
 
-  // Derived values
   const valueEth = parseInt(tx.value ?? "0x0", 16) / 1e18;
   const gasUsed = parseInt(receipt.gasUsed ?? "0x0", 16);
   const gasPrice = parseInt(tx.gasPrice ?? "0x0", 16);

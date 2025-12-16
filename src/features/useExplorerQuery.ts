@@ -33,7 +33,6 @@ export function useGetLatestBlock(chainId: number) {
         `${BASE_URL}?chainid=${chainId}&module=proxy&action=eth_getBlockByNumber&tag=${latestBlockNo}&boolean=true&apikey=${API_KEY}`
       );
       const blockDetailData = await blockDetailRes.json();
-      console.log(blockDetailData);
 
       return blockDetailData.result;
     },
@@ -50,7 +49,6 @@ export function useTransactionDetails(chainId: number, txHash: string) {
         `${BASE_URL}?chainId=${chainId}&module=proxy&action=eth_getTransactionByHash&txhash=${txHash}&apikey=${API_KEY}`
       );
       const res = await response.json();
-      console.log("res", res);
       return res;
     },
   });

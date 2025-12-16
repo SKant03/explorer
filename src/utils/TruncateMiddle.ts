@@ -20,7 +20,7 @@ export default function useTruncate() {
 
     if (address.length <= maxLength) return address;
 
-    const half = Math.floor((maxLength - 1) / 2); // leave 1 char for …
+    const half = Math.floor((maxLength - 1) / 2);
     return `${address.slice(0, half)}…${address.slice(-half)}`;
   };
 

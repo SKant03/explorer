@@ -17,10 +17,7 @@ export default function BlockList({ chainId }: { chainId: number }) {
   const { data: latestBlock, isLoading, error } = useGetLatestBlock(chainId);
   const isDark = useIsDark();
   const truncate = useTruncate();
-
-  // Copy state to show temporary feedback
   const [copied, setCopied] = useState<string | null>(null);
-
   useEffect(() => {
     if (latestBlock) {
       if (!blocks.length || blocks[0].hash !== latestBlock.hash) {
@@ -28,13 +25,11 @@ export default function BlockList({ chainId }: { chainId: number }) {
       }
     }
   }, [latestBlock, blocks, dispatch]);
-
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopied(text);
     setTimeout(() => setCopied(null), 1500);
   };
-
   return (
     <div className="w-full flex flex-col items-center p-4 text-sm lg:text-base h-screen gap-1">
       {isLoading && (
@@ -46,7 +41,7 @@ export default function BlockList({ chainId }: { chainId: number }) {
           Error fetching blocks
         </div>
       )}
-      <p className="text-lg font-semibold w-full max-w-6xl">Latest Blocks</p>
+      <p className="text-xl m-2 font-semibold w-full max-w-6xl">Latest Blocks</p>
       {latestFive.map((block) => {
         const blockNumber = parseInt(block.number ?? "0x0", 16);
         const blockSize = parseInt(block.size ?? "0x0", 16);

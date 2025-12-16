@@ -1,5 +1,4 @@
 import "./App.css";
-import { useState } from "react";
 import ThemeButton from "./components/ThemeButton";
 import { Routes, Route, Link } from "react-router-dom";
 import BlockList from "./components/BlockList";
@@ -10,14 +9,14 @@ import Block from "./pages/Block";
 import Transaction from "./pages/Transaction";
 
 function App() {
-  const [chainId, setChainId] = useState<number>(11155111);
+  const chainId: number = 11155111;
   const isDark = useIsDark();
   return (
     <div>
       <header
         className={clsx(
           "w-full flex justify-between p-3 items-center font-semibold text-2xl",
-          isDark ? "bg-gray-900/20" : "bg-gray-200"
+          isDark ? "bg-gray-800" : "bg-gray-200"
         )}
       >
         <div className="flex items-center gap-6">
@@ -30,7 +29,7 @@ function App() {
                 isDark ? "text-slate-200" : "text-slate-800"
               )}
             >
-              Block List
+              Blocks
             </Link>
             <Link
               to="/transaction"

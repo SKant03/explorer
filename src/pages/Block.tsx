@@ -4,7 +4,6 @@ import clsx from "clsx";
 import { useIsDark } from "../theme/isDark";
 import { blockDetailsQuery } from "../features/useExplorerQuery";
 import useTruncate from "../utils/TruncateMiddle";
-import { Ribbon } from "lucide-react";
 
 export default function Block({ chainId }: { chainId: number }) {
   const { blockNo } = useParams<{ blockNo: string }>();
