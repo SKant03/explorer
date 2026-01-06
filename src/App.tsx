@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import ThemeButton from "./components/ThemeButton";
+import { Routes, Route, Link } from "react-router-dom";
+import BlockList from "./components/BlockList";
+import TransactionList from "./components/TransactionList";
+import { useIsDark } from "./theme/isDark";
+import clsx from "clsx";
+import Block from "./pages/Block";
+import Transaction from "./pages/Transaction";
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const chainId: number = 11155111;
+  const isDark = useIsDark();
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <header
+        className={clsx(
+          "w-full flex justify-between p-3 items-center font-semibold text-2xl",
+          isDark ? "bg-gray-800" : "bg-gray-200"
+        )}
+      >
+        <div className="flex items-center gap-6">
+          <h1 className="font-bold text-2xl">Explorer</h1>
+          <nav className="flex gap-4 text-lg">
+            <Link
+              to="/"
+              className={clsx(
+                "hover:underline",
+                isDark ? "text-slate-200" : "text-slate-800"
+              )}
+            >
+              Blocks
+            </Link>
+            <Link
+              to="/transaction"
+              className={clsx(
+                "hover:underline",
+                isDark ? "text-slate-200" : "text-slate-800"
+              )}
+            >
+              Transactions
+            </Link>
+          </nav>
+        </div>
+        <ThemeButton />
+      </header>
+
+      <Routes>
+        <Route path="/" element={<BlockList chainId={chainId} />} />
+        <Route path="/transaction" element={<TransactionList />} />
+        <Route path="/block/:blockNo" element={<Block chainId={chainId} />} />
+        <Route path="/tx/:txHash" element={<Transaction chainId={chainId} />} />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;
